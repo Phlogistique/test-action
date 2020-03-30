@@ -8,7 +8,8 @@
     console.log(`Initialized connection to github`);
 
     const pullRequests = await octokit.pulls.list(github.context.repo);
-    console.log(`Here are the pull requests! ${pullRequests}`);
+    const pullRequestsString = JSON.stringify(pullRequests, undefined, 2);
+    console.log(`Here are the pull requests! ${pullRequestsString}`);
 
     const time = new Date().toTimeString();
     core.setOutput("time", time);
