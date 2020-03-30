@@ -3,7 +3,7 @@ const github = require('@actions/github');
 
 try {
   const nameToGreet = core.getInput('who-to-greet');
-  const octokit = github.GitHub()
+  const octokit = new github.GitHub()
   console.log(`Initialized connection to github`);
 
   const pullRequests = octokit.pulls.list(github.context.repo);
