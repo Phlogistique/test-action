@@ -6,7 +6,7 @@ try {
   const octokit = new github.GitHub(core.getInput("GITHUB_TOKEN"))
   console.log(`Initialized connection to github`);
 
-  const pullRequests = octokit.pulls.list(github.context.repo);
+  const pullRequests = await octokit.pulls.list(github.context.repo);
   console.log(`Here are the pull requests! ${pullRequests}`);
 
   const time = (new Date()).toTimeString();
