@@ -21,7 +21,7 @@ async function isAncestor(ancestor, descendent) {
     console.log(`Handling pull request ${thisPullRequest}`);
 
     const pullRequests = await octokit.pulls.list(github.context.repo);
-    const other = _.filter(pullRequests, pr => pr.id != thisPullRequest);
+    const other = filter(pullRequests, pr => pr.id != thisPullRequest);
     //const pullRequestsString = JSON.stringify(pullRequests, undefined, 2);
     console.log(`There are ${other.length} other pull requests`);
 
