@@ -1,4 +1,5 @@
 const exec = require("@actions/exec");
+const filter = require("lodash.filter");
 
 async function isAncestor(ancestor, descendent) {
   return (
@@ -16,13 +17,14 @@ async function isAncestor(ancestor, descendent) {
     const octokit = new github.GitHub(core.getInput("GITHUB_TOKEN"));
     console.log(`Initialized connection to github`);
 
-    const pullRequests = await octokit.pulls.list(github.context.repo);
-    const pullRequestsString = JSON.stringify(pullRequests, undefined, 2);
-    console.log(`Here are the pull requests! ${pullRequestsString}`);
+    const thisPullRequest = github.context.payload.pull_request.id;
+    console.log(`Handling pull request ${thisPullRequest}`);
 
-    const time = new Date().toTimeString();
-    core.setOutput("time", time);
-    // Get the JSON webhook payload for the event that triggered the workflow
+    const pullRequests = await octokit.pulls.list(github.context.repo);
+    const other = _.filter(pullRequests, pr => pr.id != thisPullRequest);
+    //const pullRequestsString = JSON.stringify(pullRequests, undefined, 2);
+    console.log(`There are ${other.length} other pull requests`);
+
     const payload = JSON.stringify(github.context.payload, undefined, 2);
     console.log(`The event payload: ${payload}`);
   } catch (error) {
