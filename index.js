@@ -1,3 +1,10 @@
+const exec= require("@actions/exec");
+
+async function isAncestor(ancestor, descendent) {
+    return 0 === await    exec("git", ["merge-base", "--is-ancestor", ancestor, descendent]);
+
+}
+
 (async function() {
   const core = require("@actions/core");
   const github = require("@actions/github");
