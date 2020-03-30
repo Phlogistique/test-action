@@ -1,0 +1,24 @@
+{
+  "name": "test-action",
+  "version": "1.0.0",
+  "description": "Test Github action",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Phlogistique/test-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Phlogistique/test-action/issues"
+  },
+  "homepage": "https://github.com/Phlogistique/test-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.3",
+    "@actions/github": "^2.1.1"
+  }
+}
