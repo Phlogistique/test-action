@@ -6,7 +6,12 @@ const filter = require("lodash.filter");
 async function isAncestor(ancestor, descendent) {
   return (
     0 ===
-    (await exec("git", ["merge-base", "--is-ancestor", ancestor, descendent]))
+    (await exec.exec("git", [
+      "merge-base",
+      "--is-ancestor",
+      ancestor,
+      descendent,
+    ]))
   );
 }
 
@@ -23,7 +28,7 @@ async function exec_capture(cmd, args) {
       },
     },
   };
-  let retcode = await exec(cmd, args, options);
+  let retcode = await exec.exec(cmd, args, options);
   if (retcode != 0) {
     throw `Invalid exit code ${retcode} for command ${cmd} ${args}:\n${err}`;
   }
