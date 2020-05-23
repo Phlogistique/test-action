@@ -18,7 +18,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
     const pullRequests = await octokit.pulls.list(github.context.repo);
     const other = filter(pullRequests, pr => pr.id != thisPullRequest);
 
-    console.log(`Other pull requests: ${other}`)
+    console.log(`Other pull requests: ${JSON.stringify(other, undefined, 2)}`)
 
 }
 
@@ -34,7 +34,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
 
     findClosestAncestorPr(octokit, thisPullRequest);
 
-    console.log(`There are ${other.length} other pull requests`);
+    //console.log(`There are ${other.length} other pull requests`);
 
     const payload = JSON.stringify(github.context.payload, undefined, 2);
     console.log(`The event payload: ${payload}`);
