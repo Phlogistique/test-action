@@ -32,7 +32,8 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
     const thisPullRequest = github.context.payload.pull_request.id;
     console.log(`Handling pull request ${thisPullRequest}`);
 
-    //const pullRequestsString = JSON.stringify(pullRequests, undefined, 2);
+    findClosestAncestorPr(octokit, thisPullRequest);
+
     console.log(`There are ${other.length} other pull requests`);
 
     const payload = JSON.stringify(github.context.payload, undefined, 2);
