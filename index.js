@@ -1,5 +1,7 @@
 const exec = require("@actions/exec");
 const filter = require("lodash.filter");
+const core = require("@actions/core");
+const github = require("@actions/github");
 
 async function isAncestor(ancestor, descendent) {
   return (
@@ -8,9 +10,19 @@ async function isAncestor(ancestor, descendent) {
   );
 }
 
+async function thisPrId() {
+  return github.context.payload.pull_request.id;
+}
+
+async function findClosestAncestorPr(octokit, thisPullRequest) {
+    const pullRequests = await octokit.pulls.list(github.context.repo);
+    const other = filter(pullRequests, pr => pr.id != thisPullRequest);
+
+    console.log(`Other pull requests: {other}`)
+
+}
+
 (async function() {
-  const core = require("@actions/core");
-  const github = require("@actions/github");
 
   try {
     const nameToGreet = core.getInput("who-to-greet");
@@ -20,8 +32,6 @@ async function isAncestor(ancestor, descendent) {
     const thisPullRequest = github.context.payload.pull_request.id;
     console.log(`Handling pull request ${thisPullRequest}`);
 
-    const pullRequests = await octokit.pulls.list(github.context.repo);
-    const other = filter(pullRequests, pr => pr.id != thisPullRequest);
     //const pullRequestsString = JSON.stringify(pullRequests, undefined, 2);
     console.log(`There are ${other.length} other pull requests`);
 
