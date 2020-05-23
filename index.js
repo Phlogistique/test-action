@@ -18,7 +18,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
     const pullRequests = await octokit.pulls.list(github.context.repo);
     const other = filter(pullRequests, pr => pr.id != thisPullRequest);
 
-    console.log(`Other pull requests: ${JSON.stringify(other, undefined, 2)}`)
+    console.log(`pull requests: ${JSON.stringify(pullRequests, undefined, 2)}`)
 
 }
 
