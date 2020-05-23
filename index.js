@@ -6,17 +6,16 @@ const filter = require("lodash.filter");
 async function isAncestor(ancestor, descendent) {
   return (
     0 ===
-    (await exec.exec("git", [
-      "merge-base",
-      "--is-ancestor",
-      ancestor,
-      descendent,
-    ]))
+    (await exec.exec(
+      "git",
+      ["merge-base", "--is-ancestor", ancestor, descendent],
+      { ignoreReturnCode: true }
+    ))
   );
 }
 
 async function fetchAllBranches() {
-  const ret = await exec.exec("git", [
+  await exec.exec("git", [
     "fetch",
     "--no-tags",
     "--prune",
@@ -24,28 +23,18 @@ async function fetchAllBranches() {
     "origin",
     "+refs/heads/*:refs/remotes/origin/*",
   ]);
-  if (ret !== 0) {
-    throw `Invalid exit code ${ret}`;
-  }
 }
 
 async function exec_capture(cmd, args) {
   let out = "";
-  let err = "";
   const options = {
     listeners: {
       stdout: (data) => {
         out += data.toString();
       },
-      stderr: (data) => {
-        err += data.toString();
-      },
     },
   };
-  let retcode = await exec.exec(cmd, args, options);
-  if (retcode != 0) {
-    throw `Invalid exit code ${retcode} for command ${cmd} ${args}:\n${err}`;
-  }
+  await exec.exec(cmd, args, options);
 
   return out;
 }
