@@ -15,6 +15,20 @@ async function isAncestor(ancestor, descendent) {
   );
 }
 
+async function fetchAllBranches() {
+  const ret = await exec.exec("git", [
+    "fetch",
+    "--no-tags",
+    "--prune",
+    "--depth=1",
+    "origin",
+    "+refs/heads/*:refs/remotes/origin/*",
+  ]);
+  if (ret !== 0) {
+    throw `Invalid exit code ${ret}`;
+  }
+}
+
 async function exec_capture(cmd, args) {
   let out = "";
   let err = "";
@@ -108,6 +122,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
     const thisPullRequest = github.context.payload.pull_request;
     console.log(`Handling pull request ${thisPullRequest.id}`);
 
+    await fetchAllBranches();
     await findClosestAncestorPr(octokit, thisPullRequest);
 
     //console.log(`There are ${other.length} other pull requests`);
