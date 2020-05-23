@@ -2,7 +2,6 @@ const exec = require("@actions/exec");
 const core = require("@actions/core");
 const github = require("@actions/github");
 const filter = require("lodash.filter");
-const minBy = require("lodash.minby");
 
 async function isAncestor(ancestor, descendent) {
   return (
@@ -42,6 +41,33 @@ async function thisPrId() {
   return github.context.payload.pull_request.id;
 }
 
+async function asyncFilter(arr, iteratee) {
+  const result = [];
+
+  for (const item of arr) {
+    if (await iteratee(item)) {
+      result.push(item);
+    }
+  }
+
+  return result;
+}
+
+async function asyncMinBy(arr, iteratee) {
+  let result = arr[0];
+  let min = iteratee(result);
+
+  for (const item of arr.slice(1)) {
+    const val = await iteratee(item);
+    if (val < min) {
+      min = val;
+      result = item;
+    }
+  }
+
+  return result;
+}
+
 async function findClosestAncestorPr(octokit, thisPullRequest) {
   const pullRequests = await octokit.pulls.list(github.context.repo);
   const other = filter(pullRequests.data, (pr) => pr.id != thisPullRequest.id);
@@ -51,7 +77,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
 
   if (other.length == 0) return null;
 
-  const ancestors = filter(
+  const ancestors = asyncFilter(
     other,
     async (pr) => await isAncestor(pr.head.sha, thisPullRequest.head.sha)
   );
@@ -60,7 +86,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
 
   if (ancestors.length == 0) return null;
 
-  const mostRecentAncestor = minBy(
+  mostRecentAncestor = asyncMinBy(
     ancestors,
     async (pr) => await age(pr.head.sha, thisPullRequest.head.sha)
   );
