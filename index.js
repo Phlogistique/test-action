@@ -77,7 +77,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
 
   if (other.length == 0) return null;
 
-  const ancestors = asyncFilter(
+  const ancestors = await asyncFilter(
     other,
     async (pr) => await isAncestor(pr.head.sha, thisPullRequest.head.sha)
   );
@@ -86,7 +86,7 @@ async function findClosestAncestorPr(octokit, thisPullRequest) {
 
   if (ancestors.length == 0) return null;
 
-  mostRecentAncestor = asyncMinBy(
+  mostRecentAncestor = await asyncMinBy(
     ancestors,
     async (pr) => await age(pr.head.sha, thisPullRequest.head.sha)
   );
